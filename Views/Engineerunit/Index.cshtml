@@ -1,0 +1,239 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model project.Models.DataModels.EngineerunitTable
+@{
+    ViewData["Title"] = "工程單位";
+}
+
+@{
+    var engineer_unit_json = @Html.Raw(Json.Serialize(@Model.data));
+    var country_list = @Html.Raw(Json.Serialize(@Model.countrylist));
+}
+
+<!--<div class="block-area">
+    <h2 class="page-title">用戶瀏覽</h2>
+</div>-->
+<!-- Responsive Table -->
+<div class="block-area" id="responsiveTable" style="text-align:center!important;">
+
+    <a data-toggle="modal" data-target="#addnewdata" href="#" title="" class="form-control btn btn-alt" style="color:white;margin-top:15px;z-index:10000;border-radius:30px!important;margin-bottom:30px;width:auto;" onclick="return false;">點我新增單位</a>
+    <!-- Modal -->
+    <div class="modal fade" id="addnewdata" tabindex="-1" style="z-index: 10000;" role="dialog">
+        <div class="modal-dialog" style="top:10%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal" aria-hidden="true" tabindex="-1">&times;</button>
+                    <h4 class="modal-title" style="font-size:20px">新增單位</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal form-validation-2" id="newform" role="form" method="post" asp-action="createengineer" asp-controller="Engineerunit">
+                        <div style="display:flex;justify-content:space-evenly;">
+                            <group>
+                                <input type="radio" id="newChoices_tax" name="newChoices" value="tax" checked />
+                                <label for="newChoices_tax">統編</label>
+                            </group>
+
+                            <group>
+                                <input type="radio" id="newChoices_notax" name="newChoices" value="notax">
+                                <label for="newChoices_notax">無統編</label>
+                            </group>
+                        </div>
+                        <div class="form-group">
+                            <label for="newname" class="col-md-3 control-label"><span style="color:red;font-weight:bold;">* </span>名稱</label>
+                            <div class="col-md-8">
+                                <input id="newname" name="newname" type="text" class="form-control input-sm validate[required]" placeholder="名稱" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newtax" class="col-md-3 control-label"><span style="color:red;font-weight:bold;">* </span>統編</label>
+                            <div class="col-md-8">
+                                <input id="newtax" name="newtax" maxlength="8" type="text" data-validatetax class="form-control input-sm validate[required,custom[number]]" placeholder="統編" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newcel" class="col-md-3 control-label">CEL</label>
+                            <div class="col-md-8">
+                                <input id="newcel" name="newcel" type="text" class="form-control input-sm mask-phone_with_ddd" placeholder="CEL" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newtelareacode" class="col-md-3 control-label">TEL</label>
+                            <div class="col-md-2">
+                                <input id="newtelareacode" name="newtelareacode" type="text" class="form-control input-sm" placeholder="TEL-區碼" autocomplete="off">
+                            </div>
+                            <div class="col-md-1">
+                                -
+                            </div>
+                            <div class="col-md-5">
+                                <input id="newtelcode" name="newtelcode" type="text" class="form-control input-sm" placeholder="TEL-號碼" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newfaxareacode" class="col-md-3 control-label">FAX</label>
+                            <div class="col-md-2">
+                                <input id="newfaxareacode" name="newfaxareacode" type="text" class="form-control input-sm" placeholder="FAX-區碼" autocomplete="off">
+                            </div>
+                            <div class="col-md-1">
+                                -
+                            </div>
+                            <div class="col-md-5">
+                                <input id="newfaxcode" name="newfaxcode" type="text" class="form-control input-sm" placeholder="FAX-號碼" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newcountry" class="col-md-3 control-label"><span style="color:red;font-weight:bold;">* </span>縣市</label>
+                            <div class="col-md-8">
+                                <select id="newcountry" name="newcountry" class="form-control input-sm validate[required]" onChange="newcountry_pick(this)">
+                                    <option value="" selected>選擇縣市</option>
+                                    @{
+                                        if (Model.countrylist != null)
+                                        {
+                                            foreach (var x in Model.countrylist)
+                                            {
+                                                <option value="@x">
+                                                    @x
+                                                </option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newcity" class="col-md-3 control-label"><span style="color:red;font-weight:bold;">* </span>地區</label>
+                            <div class="col-md-8">
+                                <select id="newcity" name="newcity" class="form-control input-sm validate[required]" onChange="newcity_pick(this)" disabled>
+                                    <option value="">選擇地區</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="newaddress" class="col-md-3 control-label"><span style="color:red;font-weight:bold;">* </span>詳細地址</label>
+                            <div class="col-md-8">
+                                <input id="newaddress" name="newaddress" class="form-control input-sm validate[required]" onchange="googlemapembed(this)" type="text" disabled placeholder="詳細地址" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="text-align:right">
+                            <!--<button type="button" class="btn btn-sm btn-alt" tabindex="-1">儲存</button>-->
+                            <button type="submit" class="btn btn-sm btn-alt" tabindex="-1">送出</button>
+                            <button type="button" class="btn btn-sm btn-alt" data-dismiss="modal" tabindex="-1">關閉</button>
+                        </div>
+                    </form>
+                    <p style="display:flex;justify-content:center;">
+                        <button id="togglemap" name="togglemap" onclick="toggledmap(this)" class="btn btn-sm btn-alt">顯示 google map 地圖</button>
+                    </p>
+                    <div class="iframe-rwd" style="margin-top:10px;">
+                        <iframe width="fit-content" id="mapembed" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD_2epcPMRsd72k2z5PexCMxt4Vi2Fp_qM&q=正昌鐵工所" style="color:#0000FF;text-align:left">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div style="display:flex;justify-content:space-between;" class="hide-on-desktop">
+        <h3 class="block-title">左滑&larr;</h3>
+        <h3 class="block-title">工程單位</h3>
+        <h3 class="block-title">右滑&rarr;</h3>
+    </div>
+    <div class="table-responsive overflow" id="main_table">
+        <table class="table tile table-bordered table-striped" id="edit_table">
+            <thead>
+                <tr>
+                    <th style="text-align:center;vertical-align:middle;">編輯</th>
+                    <th style="text-align:center;vertical-align:middle;">刪除</th>
+                    <th style="text-align:center;vertical-align:middle;">
+                        (有/無)統編
+                        <!--<div class="media-body">
+                            <input id="search_unittype" type="text" class="main-search" oninput="searching(this)" onchange="searching(this)" placeholder="搜尋關鍵字">
+                        </div>-->
+                    </th>
+                    <th style="text-align:center;vertical-align:middle;">
+                        單位
+                        <!--<div class="media-body">
+                            <input id="search_name" type="text" class="main-search" oninput="searching(this)" onchange="searching(this)" placeholder="搜尋關鍵字">
+                        </div>-->
+                    </th>
+                    <th style="text-align:center;vertical-align:middle;">
+                        統編
+                        <!--<div class="media-body">
+                            <input id="search_tax" type="text" class="main-search" oninput="searching(this)" onchange="searching(this)" placeholder="搜尋關鍵字">
+                        </div>-->
+                    </th>
+                    <th style="text-align:center;vertical-align:middle;">
+                        縣市
+                        <!--<div class="media-body">
+                            <input id="search_country" type="text" class="main-search" oninput="searching(this)" onchange="searching(this)" placeholder="搜尋關鍵字">
+                        </div>-->
+                    </th>
+                    <th style="text-align:center;vertical-align:middle;">
+                        地區
+                        <!--<div class="media-body">
+                            <input id="search_city" type="text" class="main-search" oninput="searching(this)" onchange="searching(this)" placeholder="搜尋關鍵字">
+                        </div>-->
+                    </th>
+                    <th style="text-align:center;vertical-align:middle;">
+                        詳細地址
+                        <!--<div class="media-body">
+                            <input id="search_address" type="text" class="main-search" oninput="searching(this)" onchange="searching(this)" placeholder="搜尋關鍵字">
+                        </div>-->
+                    </th>
+                    <th style="text-align:center;vertical-align:middle;">
+                        CEL
+                        <!--<div class="media-body">
+                            <input id="search_cel" type="text" class="main-search" oninput="searching(this)" onchange="searching(this)" placeholder="搜尋關鍵字">
+                        </div>-->
+                    </th>
+                    <th style="text-align:center;vertical-align:middle;">
+                        TEL
+                        <!--<div class="media-body">
+                            <input id="search_tel" type="text" class="main-search" oninput="searching(this)" onchange="searching(this)" placeholder="搜尋關鍵字">
+                        </div>-->
+                    </th>
+                    <th style="text-align:center;vertical-align:middle;">
+                        FAX
+                        <!--<div class="media-body">
+                            <input id="search_fax" type="text" class="main-search" oninput="searching(this)" onchange="searching(this)" placeholder="搜尋關鍵字">
+                        </div>-->
+                    </th>
+                    <th style="text-align:center;vertical-align:middle;">
+                        上次修改時間
+                    </th>
+                    <th style="text-align:center;vertical-align:middle;">
+                        上次修改者
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="container" style="font-size:20px;">
+        <ul class="pagination">
+        </ul>
+    </div>
+    <div style="display:flex;justify-content:center;align-items:center;">
+        <input type="text" id="jump_page" class="btn btn-alt input-sm mask-page" style="width:75px;font-size:20px;" onchange="jump_page_event(this);" disabled/>
+
+        <span style="font-size:20px;margin-left:10px;margin-right:10px"> / </span>
+
+        <h4 id="total_page">無</h4>
+    </div>
+</div>
+@if (TempData["message"] != null)
+{
+    <script>pop_news('@TempData["message"]')</script>
+}
+
+<!-- Input Mask -->
+<script src="~/js/input-mask.min.js"></script>
+<!-- Textare autosize-->
+<script src="~/js/autosize.min.js"></script>
+<!-- Textare autosize-->
+<script src="~/js/engineerunit/functions.js"></script>
+<script src="~/js/listening_onlineuser.js"></script>
+<script src="~/js/listening_userblocking.js"></script>
+<script>__init__(@engineer_unit_json,@country_list);</script>

@@ -1,0 +1,100 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>待核准</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="~/Login/images/icons/favicon.ico" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login/vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login/vendor/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login/vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login/vendor/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login/vendor/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login/vendor/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login/css/util.css">
+    <link rel="stylesheet" type="text/css" href="~/Login/css/main.css">
+    <!--===============================================================================================-->
+</head>
+<body>
+    <ul class="bg-bubbles">
+        <li id="animate1"></li>
+        <li id="animate2"></li>
+        <li id="animate3"></li>
+        <li id="animate4"></li>
+        <li id="animate5"></li>
+        <li id="animate6"></li>
+        <li id="animate7"></li>
+        <li id="animate8"></li>
+        <li id="animate9"></li>
+        <li id="animate10"></li>
+        <li id="animate11"></li>
+    </ul>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100 p-t-90 p-b-30" style="z-index:1;">
+                <span class="login100-form-title p-b-40">
+                    報價/請款單系統
+                </span>
+
+                <div class="text-center p-t-55 p-b-30">
+                    <span class="txt1">
+                        註冊成功 - 待驗證
+                    </span>
+                </div>
+                <div class="text-center p-t-55 p-b-30">
+                    <img src="~/img/1494.gif" alt="Waiting...." />
+                </div>
+
+                <div class="text-center p-t-55 p-b-30">
+                    <span class="txt3">
+                        @User.Identity.Name ， 您好<br />
+                        請聯繫管理員，並請求發送認證網址至信箱
+                    </span>
+                </div>
+
+                <div class="flex-col-c p-t-120">
+                    <a class="login100-form-btn" href="@Url.Action("Index","Signout")">
+                        登出
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--===============================================================================================-->
+    <script src="~/Login/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Login/vendor/animsition/js/animsition.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Login/vendor/bootstrap/js/popper.js"></script>
+    <script src="~/Login/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Login/vendor/select2/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Login/vendor/daterangepicker/moment.min.js"></script>
+    <script src="~/Login/vendor/daterangepicker/daterangepicker.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Login/vendor/countdowntime/countdowntime.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Login/js/main.js"></script>
+    <script src="~/js/listening_onlineuser.js"></script>
+    <script src="~/js/listening_certification.js"></script>
+</body>
+</html>

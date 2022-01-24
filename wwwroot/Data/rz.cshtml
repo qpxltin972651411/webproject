@@ -1,0 +1,264 @@
+@{
+                        int count = 1;
+                        var tmp = "";
+                        var detailaddress = "";
+                        bool allow = false;
+                        string disabledstring = "disabled";
+                        var radio_tmp = "";
+                        if (Model.data != null)
+                        {
+                            foreach (var v in Model.data)
+                            {
+                                allow = false;
+                                foreach (var child in v.identity)
+                                {
+                                    var eml = @User.Claims.FirstOrDefault(x => x.Type == "emailaddress").Value;
+                                    if (child.email.Equals(eml))
+                                    {
+                                        allow = true;
+                                        break;
+                                    }
+                                }
+                                <tr>
+                                    <td>
+                                        @{tmp = (@String.Format("#form-modal{0}", count));}
+                                        @if (allow)
+                                        {
+                                            disabledstring = "";
+                                            <a data-toggle="modal" data-target="@tmp" href="#" onclick="return false;" class="btn btn-block btn-alt" style="border:1px solid rgba(127, 255, 127, 0.31) !important">編輯</a>
+                                        }
+                                        else
+                                        {
+                                            disabledstring = "disabled";
+                                            <a data-toggle="modal" data-target="@tmp" href="#" onclick="return false;" class="btn btn-block btn-alt" style="border:1px solid rgba(127, 255, 127, 0.31) !important">查看</a>
+                                        }
+                                        <!-- Modal -->
+                                        @{tmp = (@String.Format("form-modal{0}", count));}
+                                        <div class="modal fade" id="@tmp" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog" style="top:10%;">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button class="close" type="button" data-dismiss="modal" aria-hidden="true" tabindex="-1">&times;</button>
+                                                        @if (allow)
+                                                        {
+                                                            <h4 class="modal-title" style="font-size:20px">編輯資料</h4>
+                                                        }
+                                                        else
+                                                        {
+                                                            <h4 class="modal-title" style="font-size:20px">僅能查看 無法編輯</h4>
+                                                            <form asp-controller="Engineerunit" asp-action="">
+                                                                <button type="submit" class="btn btn-sm btn-alt" tabindex="-1">要求編輯權限</button>
+                                                            </form>
+                                                        }
+                                                        <div style="display:flex;flex-direction:column;">
+                                                            <h6><span style="color:red;font-weight:bold;">* </span>必填欄位</h6>
+                                                            <h6><span style="color:red;font-weight:bold;">* </span>編輯完成時請按下方儲存按鈕，才算完成編輯</h6>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        @{tmp = (@String.Format("edit_form{0}", count));}
+                                                        <form class="li form-validation-2" role="form" id="@tmp" asp-controller="Engineerunit" asp-action="">
+                                                            <div style="display:flex;justify-content:space-evenly;">
+                                                                @{tmp = (@String.Format("Choices_tax{0}", count));}
+                                                                @{radio_tmp = (@String.Format("Choices{0}", count));}
+                                                                <group>
+                                                                    <input type="radio" id="@tmp" name="@radio_tmp" value="tax" @disabledstring/>
+                                                                    <label for="@tmp">統編</label>
+                                                                </group>
+                                                                @{tmp = (@String.Format("Choices_notax{0}", count));}
+                                                                <group>
+                                                                    <input type="radio" id="@tmp" name="@radio_tmp" value="notax" @disabledstring/>
+                                                                    <label for="@tmp">無統編</label>
+                                                                </group>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                @{tmp = (@String.Format("name{0}", count));}
+                                                                <label for="@tmp" class="col-md-3 control-label"><span style="color:red;font-weight:bold;">* </span>名稱</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="@tmp" name="@tmp" type="text" class="form-control input-sm validate[required]" placeholder="名稱" value="@v.name" autocomplete="off" @disabledstring>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                @{tmp = (@String.Format("tax{0}", count));}
+                                                                <label for="@tmp" class="col-md-3 control-label"><span style="color:red;font-weight:bold;">* </span>統編</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="@tmp" name="@tmp" type="text" maxlength="8" data-validatetax class="form-control input-sm validate[required,custom[number]]" placeholder="統編" value="@v.tax" autocomplete="off" disabled>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                @{tmp = (@String.Format("cel{0}", count));}
+                                                                <label for="@tmp" class="col-md-3 control-label">CEL</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="@tmp" name="@tmp" type="text" value="@v.cel" class="form-control input-sm mask-phone_with_ddd" placeholder="CEL" autocomplete="off" @disabledstring>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                @{tmp = (@String.Format("telareacode{0}", count));}
+
+                                                                <label for="@tmp" class="col-md-3 control-label">TEL</label>
+                                                                <div class="col-md-2">
+                                                                    <input id="@tmp" name="@tmp" value="@v.tel.areacode" type="text" class="form-control input-sm" placeholder="TEL-區碼" autocomplete="off" @disabledstring>
+                                                                </div>
+                                                                @{tmp = (@String.Format("telcode{0}", count));}
+                                                                <div class="col-md-1">
+                                                                    -
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <input id="@tmp" name="@tmp" value="@v.tel.code" type="text" class="form-control input-sm" placeholder="TEL-號碼" autocomplete="off" @disabledstring>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                @{tmp = (@String.Format("faxareacode{0}", count));}
+                                                                <label for="@tmp" class="col-md-3 control-label">FAX</label>
+                                                                <div class="col-md-2">
+                                                                    <input id="@tmp" name="@tmp" value="@v.fax.areacode" type="text" class="form-control input-sm" placeholder="FAX-區碼" autocomplete="off" @disabledstring>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    -
+                                                                </div>
+                                                                @{tmp = (@String.Format("faxcode{0}", count));}
+                                                                <div class="col-md-5">
+                                                                    <input id="@tmp" name="@tmp" value="@v.fax.code" type="text" class="form-control input-sm" placeholder="FAX-號碼" autocomplete="off" @disabledstring>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                @{tmp = (@String.Format("country{0}", count));}
+                                                                <label for="@tmp" class="col-md-3 control-label"><span style="color:red;font-weight:bold;">* </span>縣市</label>
+                                                                <div class="col-md-8">
+                                                                    <select id="@tmp" name="@tmp" class="form-control input-sm validate[required]" onChange="country_pick(this)" @disabledstring>
+                                                                        <option value="">選擇縣市</option>
+                                                                        @{
+                                                                            if (Model.countrylist != null)
+                                                                            {
+                                                                                foreach (var x in Model.countrylist)
+                                                                                {
+                                                                                    if (x == v.country)
+                                                                                    {
+                                                                                        <option value="@x" selected>
+                                                                                            @x
+                                                                                        </option>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <option value="@x">
+                                                                                            @x
+                                                                                        </option>
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                @{tmp = (@String.Format("city{0}", count));}
+                                                                <label for="@tmp" class="col-md-3 control-label"><span style="color:red;font-weight:bold;">* </span>地區</label>
+                                                                <div class="col-md-8">
+                                                                    <select id="@tmp" name="@tmp" data-value="@v.city" class="form-control input-sm validate[required]" onChange="city_pick(this)" @disabledstring>
+                                                                        <option value="">選擇地區</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                @{tmp = (@String.Format("address{0}", count));}
+                                                                <label for="@tmp" class="col-md-3 control-label"><span style="color:red;font-weight:bold;">* </span>詳細地址</label>
+                                                                <div class="col-md-8">
+                                                                    <input id="@tmp" name="@tmp" value="@v.address" type="text" class="form-control input-sm validate[required]" onchange="editgooglemapembed(this)" placeholder="詳細地址" autocomplete="off" @disabledstring>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                @{tmp = (@String.Format("lastedittime{0}", count));}
+                                                                <label for="@tmp" class="col-md-3 control-label">最後編輯時間</label>
+                                                                <div class="col-md-8">
+                                                                    <label id="@tmp" name="@tmp" class="form-control input-sm">@v.lastedittime</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer" style="text-align:right">
+                                                                @if (allow)
+                                                                {
+                                                                    tmp = (@String.Format("editsubmit{0}", count));
+                                                                    <button id="@tmp" type="submit" class="btn btn-sm btn-alt" tabindex="-1">儲存</button>
+                                                                }
+                                                                <button type="button" class="btn btn-sm btn-alt" data-dismiss="modal" tabindex="-1">關閉</button>
+                                                            </div>
+                                                        </form>
+                                                        @{tmp = (@String.Format("togglemap{0}", count));}
+                                                        <p style="display:flex;justify-content:center;">
+                                                            <button id="@tmp" name="@tmp" onclick="toggledmap(this)" class="btn btn-sm btn-alt">顯示 google map 地圖</button>
+                                                        </p>
+                                                        @{tmp = (@String.Format("mapembed{0}", count));}
+                                                        @{detailaddress = (@String.Format("https://www.google.com/maps/embed/v1/place?key=AIzaSyD_2epcPMRsd72k2z5PexCMxt4Vi2Fp_qM&q={0}", v.country + v.city + v.address));}
+                                                        <div class="iframe-rwd" style="margin-top:10px;">
+                                                            <iframe width="fit-content" id="@tmp" name="@tmp" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="@detailaddress" style="color:#0000FF;text-align:left">
+                                                            </iframe>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--data-toggle="modal" href="#form-modal1"-->
+                                    </td>
+                                    <td>
+                                        @{tmp = (@String.Format("form{0}", count));}
+                                        @if (allow)
+                                        {
+                                            <a id="@tmp" href="#" onClick="refresh_table(this); return false;" class="btn btn-block btn-alt" style="border:1px solid rgba(255, 127, 127, 0.31) !important" @disabledstring>刪除</a>
+                                        }
+                                        else
+                                        {
+                                            <span id="@tmp" class="btn btn-block btn-alt" style="border:1px solid rgba(255, 127, 127, 0.31) !important" @disabledstring>沒有權限</span>
+                                        }
+
+                                    </td>
+                                    @if (v.unittype == "notax")
+                                    {
+                                        <td>無</td>
+                                    }
+                                    else { 
+                                        <td>有</td>
+                                    }
+                                    <td>@v.name</td>
+                                    @if (v.unittype == "notax")
+                                    {
+                                        <td style="color:red;font-size:20px;">✕</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@v.tax</td>
+                                    }
+                                    <td>@v.country</td>
+                                    <td>@v.city</td>
+                                    <td>@v.address</td>
+                                    <td>@v.cel</td>
+                                    <td>@v.tel.areacode @v.tel.code</td>
+                                    <td>@v.fax.areacode @v.fax.code</td>
+                                    <td>@v.lastedittime</td>
+                                    <td>@v.lastedituser.name</td>
+                                </tr>
+                                count = count + 1;
+                            }
+                        }
+                    }
+
+
+
+<li class="page-item disabled">
+                <span class="page-link">頁首</span>
+            </li>
+            <li class="page-item active">
+                <span class="page-link">
+                    1
+                    <span class="sr-only">(current)</span>
+                </span>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">
+                    2
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#" onclick="document.getElementById('load').classList.toggle('display_none');">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">頁尾</a>
+            </li>
